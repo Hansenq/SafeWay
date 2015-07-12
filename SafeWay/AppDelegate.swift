@@ -17,28 +17,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // !! Do not share this key! !!
         GMSServices .provideAPIKey("AIzaSyByf93DyY9g-sezZBVIKJKQ4_2Q4M57dqQ")
+        UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: .Fade)
 
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         self.window?.backgroundColor = UIColor.whiteColor()
         self.window?.makeKeyAndVisible()
 
-        let tbc = UITabBarController()
+//        let tbc = UITabBarController()
+//
+//        let tbiInput = UITabBarItem(tabBarSystemItem: .Search, tag: 0)
+//        let vcInput = InputViewController()
+////        let vcNav = UINavigationController(rootViewController: vcInput)
+////        vcNav.navigationBarHidden = true
+//        vcInput.tbc = tbc
+//        vcInput.tabBarItem = tbiInput
+//        
+//        let tbiMap = UITabBarItem(tabBarSystemItem: .Bookmarks, tag: 1)
+//        let vcMap = MapViewController()
+//        vcMap.tabBarItem = tbiMap
+//        vcInput.mvc = vcMap
+//
+//        let tbiMap2 = UITabBarItem(tabBarSystemItem: .History, tag: 2)
+        let vcMap2 = EntireMapView()
+//        vcMap2.tabBarItem = tbiMap2
+//
+//        tbc.viewControllers = [vcInput, vcMap, vcMap2]
 
-        let tbiInput = UITabBarItem(tabBarSystemItem: .Search, tag: 0)
-        let vcInput = InputViewController()
-//        let vcNav = UINavigationController(rootViewController: vcInput)
-//        vcNav.navigationBarHidden = true
-        vcInput.tbc = tbc
-        vcInput.tabBarItem = tbiInput
-        
-        let tbiMap = UITabBarItem(tabBarSystemItem: .Bookmarks, tag: 1)
-        let vcMap = MapViewController()
-        vcMap.tabBarItem = tbiMap
-        vcInput.mvc = vcMap
-
-        tbc.viewControllers = [vcInput, vcMap]
-
-        self.window?.rootViewController = tbc
+        self.window?.rootViewController = vcMap2
 
         return true
     }

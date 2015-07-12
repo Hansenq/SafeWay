@@ -29,7 +29,7 @@ class MapViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.mapView.padding = UIEdgeInsetsMake(0, 0, 49, 0)
+        self.mapView.padding = UIEdgeInsetsMake(0, 0, 0, 0)
         self.mapView.settings.compassButton = true
         self.mapView.myLocationEnabled = true
         self.mapView.settings.myLocationButton = true
@@ -65,7 +65,7 @@ class MapViewController: UIViewController {
         let neLng = json["routes"][0]["bounds"]["northeast"]["lng"].doubleValue
         let swLat = json["routes"][0]["bounds"]["southwest"]["lat"].doubleValue
         let swLng = json["routes"][0]["bounds"]["southwest"]["lng"].doubleValue
-        self.mapView.camera = self.mapView.cameraForBounds(
+        let camera = self.mapView.cameraForBounds(
             GMSCoordinateBounds(coordinate: CLLocationCoordinate2DMake(
                 neLat,
                 neLng
@@ -74,32 +74,34 @@ class MapViewController: UIViewController {
                 swLng
             )), insets: UIEdgeInsetsMake(100, 100, 100, 100))
 
-//        self.mapView.animateToZoom(calculateZoom(neLat, neLng: neLng, swLat: swLat, swLng: swLng));
-        self.mapView.animateToZoom(13)
+        self.mapView.animateToCameraPosition(camera)
+
+        self.mapView.animateToZoom(calculateZoom(Float(neLat), neLng: Float(neLng), swLat: Float(swLat), swLng: Float(swLng)) - 0.3);
+//        self.mapView.animateToZoom(13)
     }
 
-//    func calculateZoom(neLat: Float, neLng: Float, swLat: Float, swLng: Float) -> Float {
-//            var WORLD_DIM = [ "height": 256, "width": 256 ];
-//            var ZOOM_MAX = 21;
-//
-//            var latFraction = (latRad(neLat) - latRad(swLat)) / M_PI;
-//
-//            var lngDiff = neLng - swLng;
-//            var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
-//
-//            var latZoom = zoom(self.mapView.bounds.height, WORLD_DIM.height, latFraction);
-//            var lngZoom = zoom(self.mapView.bounds.width, WORLD_DIM.width, lngFraction);
-//            
-//            return min(latZoom, lngZoom, ZOOM_MAX);
-//    }
-//    func latRad(lat: Float) {
-//        var sin = sin(lat * M_PI / 180);
-//        var radX2 = log((1 + sin) / (1 - sin)) / 2;
-//        return max(min(radX2, M_PI), -M_PI) / 2;
-//    }
-//    func zoom(mapPx: Float, worldPx: Float, fraction: Float) {
-//        return min(log(mapPx / worldPx / fraction) / log(2));
-//    }
+    func calculateZoom(neLat: Float, neLng: Float, swLat: Float, swLng: Float) -> Float {
+        var WORLD_DIM = [ "height": 256, "width": 256 ];
+        var ZOOM_MAX: Float = 21;
+
+        var latFraction = (latRad(neLat) - latRad(swLat)) / Float(M_PI);
+
+        var lngDiff = neLng - swLng;
+        var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+        var latZoom = zoom(Float(self.mapView.bounds.height), worldPx: Float(WORLD_DIM["height"]!), fraction: latFraction);
+        var lngZoom = zoom(Float(self.mapView.bounds.width), worldPx: Float(WORLD_DIM["width"]!), fraction: lngFraction);
+        
+        return min(latZoom, min(lngZoom, ZOOM_MAX));
+    }
+    func latRad(lat: Float) -> Float {
+        var sin1 = sin(lat * Float(M_PI) / 180);
+        var radX2 = log((1 + sin1) / (1 - sin1)) / 2;
+        return max(min(radX2, Float(M_PI)), Float(-M_PI)) / 2;
+    }
+    func zoom(mapPx: Float, worldPx: Float, fraction: Float) -> Float {
+        return floor(log(mapPx / worldPx / fraction) / log(2));
+    }
 
     func displayPolyline(line: String, view: GMSMapView, primary: Bool) {
         var line = GMSPolyline(path: GMSPath(fromEncodedPath: line))

@@ -16,6 +16,7 @@
 		64AF4FBB1B51D8B500F2C6EF /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64AF4FBA1B51D8B500F2C6EF /* MapViewController.swift */; };
 		64AF4FBD1B51FA6D00F2C6EF /* InputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64AF4FBC1B51FA6D00F2C6EF /* InputViewController.swift */; };
 		64BE7FF61B520613000E6FDA /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64BE7FF51B520613000E6FDA /* APIManager.swift */; };
+		64BFE1FB1B52C9DA00349FB4 /* EntireMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64BFE1FA1B52C9DA00349FB4 /* EntireMapView.swift */; };
 		F29C86245333754950EF6A6F /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F355B89AF9F4FE46390926C /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -45,6 +46,7 @@
 		64AF4FBA1B51D8B500F2C6EF /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		64AF4FBC1B51FA6D00F2C6EF /* InputViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputViewController.swift; sourceTree = "<group>"; };
 		64BE7FF51B520613000E6FDA /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		64BFE1FA1B52C9DA00349FB4 /* EntireMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntireMapView.swift; sourceTree = "<group>"; };
 		9F355B89AF9F4FE46390926C /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEDCED72D5FBB9F9C013FBDB /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -103,6 +105,7 @@
 				649453471B51D2370030714E /* AppDelegate.swift */,
 				649453491B51D2370030714E /* ViewController.swift */,
 				64AF4FBA1B51D8B500F2C6EF /* MapViewController.swift */,
+				64BFE1FA1B52C9DA00349FB4 /* EntireMapView.swift */,
 				640EDB391B5220C5003A2DD7 /* NavigationViewController.swift */,
 				64AF4FBC1B51FA6D00F2C6EF /* InputViewController.swift */,
 				640EDB3B1B5228F9003A2DD7 /* TableViewController.swift */,
@@ -302,6 +305,7 @@
 				64AF4FBB1B51D8B500F2C6EF /* MapViewController.swift in Sources */,
 				64BE7FF61B520613000E6FDA /* APIManager.swift in Sources */,
 				649453481B51D2370030714E /* AppDelegate.swift in Sources */,
+				64BFE1FB1B52C9DA00349FB4 /* EntireMapView.swift in Sources */,
 				64AF4FBD1B51FA6D00F2C6EF /* InputViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

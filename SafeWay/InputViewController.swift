@@ -20,6 +20,7 @@ class InputViewController: UIViewController {
     let originTextField: UITextField
     let destinationTextField: UITextField
     let submitButton: UIButton
+//    let tableViewController: TableViewController
 
     let buttonPressedSignal: Signal<(String, String), NoError>
     let buttonPressedObserver: Signal<(String, String), NoError>.Observer
@@ -30,6 +31,7 @@ class InputViewController: UIViewController {
         self.originTextField = UITextField()
         self.destinationTextField = UITextField()
         self.submitButton = UIButton()
+//        self.tableViewController = TableViewController()
         (self.buttonPressedSignal, self.buttonPressedObserver) = Signal<(String, String), NoError>.pipe()
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)   
     }
@@ -53,6 +55,9 @@ class InputViewController: UIViewController {
         self.view.addSubview(self.originTextField)
         self.view.addSubview(self.destinationTextField)
         self.view.addSubview(self.submitButton)
+
+        // Customize tableView
+//        self.view.addSubview(self.tableViewController)
 
         self.originTextField.snp_makeConstraints { [unowned self] make in
             make.top.equalTo(self.view).insets(UIEdgeInsetsMake(50, 0, 0, 0))
