@@ -82,6 +82,19 @@ public class EntireMapView: UIViewController, GMSMapViewDelegate, UITextFieldDel
         println("Hello!")
     }
 
+    public func mapView(mapView: GMSMapView!, didTapInfoWindowOfMarker marker: GMSMarker!) {
+        let json = JSON(marker.userData)
+        println("THIS IS THE MARKER!")
+        println("\(json)")
+        let saddr: String = json["legs"][0]["start_address"].stringValue.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
+        let daddr: String = json["legs"][0]["end_address"].stringValue.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
+        if (UIApplication.sharedApplication().canOpenURL(NSURL(string:"comgooglemaps://")!)) {
+            UIApplication.sharedApplication().openURL(NSURL(string:"comgooglemaps://?directionsmode=walking&saddr=\(saddr)&daddr=\(daddr)")!)
+        } else {
+            UIApplication.sharedApplication().openURL(NSURL(string:"http://maps.google.com/maps?directionsmode=walking&saddr=\(saddr)&daddr=\(daddr)")!)
+        }
+    }
+
     public func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         if textField.text != "" {
@@ -102,8 +115,9 @@ public class EntireMapView: UIViewController, GMSMapViewDelegate, UITextFieldDel
         println("Requesting from url \(url)")
         AFHTTPRequestOperationManager().GET(url, parameters: parameters, success: { [unowned self] (operation, responseObj) -> Void in
             self.mapView.displayRoutes(JSON(responseObj))
+            println("Response Succeeded!")
             }, failure: { (operation, error) -> Void in
-                println("Error: \(error)")
+            println("Error: \(error)")
         })
     }
 

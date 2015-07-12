@@ -10,15 +10,27 @@ import GoogleMaps
 import SwiftyJSON
 import UIKit
 
+class MyView : UIView {
+    override func drawRect(rect: CGRect) {
+        let c = UIGraphicsGetCurrentContext()
+        CGContextAddRect(c, CGRectMake(10, 10, 80, 80))
+        CGContextSetStrokeColorWithColor(c , UIColor.redColor().CGColor)
+        CGContextStrokePath(c)
+    }
+}
+
 class MapViewController: UIViewController {
 
     let mapView: GMSMapView
 
     var polylines : Array<GMSPolyline>
+    var markers: Array<GMSMarker>
+    var json: JSON?
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         let cameraPosition = GMSCameraPosition.cameraWithLatitude(37.7771754, longitude: -122.4184106, zoom: 15)
         self.mapView = GMSMapView.mapWithFrame(CGRectZero, camera: cameraPosition)
+        self.markers = Array<GMSMarker>()
         self.polylines = Array<GMSPolyline>()
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -35,8 +47,8 @@ class MapViewController: UIViewController {
         self.mapView.settings.myLocationButton = true
 
         self.view = UIView()
-        self.view.addSubview(mapView)
-        mapView.snp_makeConstraints { (make) -> Void in
+        self.view.addSubview(self.mapView)
+        self.mapView.snp_makeConstraints { (make) -> Void in
             make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0))
         }
     }
@@ -47,12 +59,21 @@ class MapViewController: UIViewController {
     }
 
     func displayRoutes(json: JSON) {
+        println("Displaying new routes!")
+        self.json = json
+
+        // Remove all current polylines
         self.polylines.map { [unowned self] line in
             line.map = nil
         }
         self.polylines = Array<GMSPolyline>()
+        // Remove markers
+        self.markers.map { [unowned self] marker in
+            marker.map = nil
+        }
+        self.markers = Array<GMSMarker>()
 
-        // Remove all current polylines
+        // Display Polylines
         var lines = Array<String>()
         for (index: String, obj: JSON) in json["routes"] {
             lines.append(obj["overview_polyline"]["points"].stringValue)
@@ -60,7 +81,6 @@ class MapViewController: UIViewController {
         lines.map { [unowned self] line in
             self.displayPolyline(line, view: self.mapView, primary: line == lines.first)
         }
-        println("\(json)")
         let neLat = json["routes"][0]["bounds"]["northeast"]["lat"].doubleValue
         let neLng = json["routes"][0]["bounds"]["northeast"]["lng"].doubleValue
         let swLat = json["routes"][0]["bounds"]["southwest"]["lat"].doubleValue
@@ -73,11 +93,27 @@ class MapViewController: UIViewController {
                 swLat,
                 swLng
             )), insets: UIEdgeInsetsMake(100, 100, 100, 100))
-
         self.mapView.animateToCameraPosition(camera)
+        self.mapView.animateToZoom(calculateZoom(Float(neLat), neLng: Float(neLng), swLat: Float(swLat), swLng: Float(swLng)) - 0.25);
 
-        self.mapView.animateToZoom(calculateZoom(Float(neLat), neLng: Float(neLng), swLat: Float(swLat), swLng: Float(swLng)) - 0.3);
-//        self.mapView.animateToZoom(13)
+        // Display markers
+        for (index: String, route: JSON) in json["routes"] {
+            let lat = route["legs"][0]["via_waypoint"][0]["location"]["lat"].double ?? route["legs"][0]["end_location"]["lat"].double
+            let lng = route["legs"][0]["via_waypoint"][0]["location"]["lng"].double ?? route["legs"][0]["end_location"]["lng"].double
+            if lat != nil && lng != nil {
+                let loc = CLLocationCoordinate2DMake(lat!, lng!)
+                let marker = GMSMarker(position: loc)
+                marker.title = route["summary"].stringValue
+                marker.appearAnimation = kGMSMarkerAnimationPop
+                marker.map = self.mapView
+                marker.userData = route.object
+                let score = floor(route["score"].doubleValue * 10000) / 100.0
+                marker.snippet = "Safety Score: \(score)% \nTap again to open Google Maps."
+                if index == "0" {
+                    marker.icon = GMSMarker.markerImageWithColor(UIColor.blueColor())
+                }
+            }
+        }
     }
 
     func calculateZoom(neLat: Float, neLng: Float, swLat: Float, swLng: Float) -> Float {
