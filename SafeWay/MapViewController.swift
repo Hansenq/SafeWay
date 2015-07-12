@@ -56,8 +56,6 @@ class MapViewController: UIViewController {
             self.displayPolyline(line, view: self.mapView, primary: line == lines.first)
         }
         println("\(json)")
-//        let midLat = (json["routes"][0]["bounds"]["northeast"]["lat"].doubleValue + json["routes"][0]["bounds"]["southwest"]["lat"].doubleValue) / 2
-//        let midLng = (json["routes"][0]["bounds"]["northeast"]["lng"].doubleValue + json["routes"][0]["bounds"]["southwest"]["lng"].doubleValue) / 2
         let neLat = json["routes"][0]["bounds"]["northeast"]["lat"].doubleValue
         let neLng = json["routes"][0]["bounds"]["northeast"]["lng"].doubleValue
         let swLat = json["routes"][0]["bounds"]["southwest"]["lat"].doubleValue
@@ -70,6 +68,7 @@ class MapViewController: UIViewController {
                 swLat,
                 swLng
             )), insets: UIEdgeInsetsMake(100, 100, 100, 100))
+
 //        self.mapView.animateToZoom(calculateZoom(neLat, neLng: neLng, swLat: swLat, swLng: swLng));
         self.mapView.animateToZoom(13)
     }
@@ -100,7 +99,7 @@ class MapViewController: UIViewController {
     func displayPolyline(line: String, view: GMSMapView, primary: Bool) {
         var line = GMSPolyline(path: GMSPath(fromEncodedPath: line))
         line.map = mapView
-        line.strokeColor = (primary ? UIColor.blueColor() : UIColor.blackColor().colorWithAlphaComponent(0.8)).colorWithAlphaComponent(0.3)
+        line.strokeColor = (primary ? UIColor.blueColor() : UIColor.blackColor()).colorWithAlphaComponent(0.3)
         line.strokeWidth = 5
         self.polylines.append(line)
     }

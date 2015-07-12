@@ -82,6 +82,7 @@ class InputViewController: UIViewController {
             println("Requesting from url \(url)")
             AFHTTPRequestOperationManager().GET(url, parameters: parameters, success: { [unowned self] (operation, responseObj) -> Void in
                 self.mvc?.displayRoutes(JSON(responseObj))
+                self.tbc?.selectedIndex = 1
             }, failure: { (operation, error) -> Void in
                 println("Error: \(error)")
             })
