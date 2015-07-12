@@ -47,6 +47,11 @@ class MapViewController: UIViewController {
     }
 
     func displayRoutes(json: JSON) {
+        self.polylines.map { [unowned self] line in
+            line.map = nil
+        }
+        self.polylines = Array<GMSPolyline>()
+
         // Remove all current polylines
         var lines = Array<String>()
         for (index: String, obj: JSON) in json["routes"] {
